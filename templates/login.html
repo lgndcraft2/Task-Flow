@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In - TaskFlow</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1e88e5;
+            --dark-blue: #0d47a1;
+            --light-blue: #bbdefb;
+            --accent-blue: #64b5f6;
+            --white: #ffffff;
+            --light-gray: #f5f7fa;
+            --dark-gray: #333333;
+            --medium-gray: #757575;
+            --error-red: #f44336;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+            color: var(--primary-blue);
+            font-weight: 700;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark-gray);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-blue);
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            border: none;
+        }
+        
+        .btn-outline {
+            border: 2px solid var(--primary-blue);
+            color: var(--primary-blue);
+            background: transparent;
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--dark-blue);
+        }
+        
+        /* Menu toggle for mobile */
+        .menu-toggle {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--primary-blue);
+            background: none;
+            border: none;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 80px;
+            left: 0;
+            right: 0;
+            background-color: var(--white);
+            padding: 20px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            z-index: 99;
+            border-top: 1px solid var(--light-blue);
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .mobile-nav-links a {
+            text-decoration: none;
+            color: var(--dark-gray);
+            font-weight: 500;
+            padding: 12px 15px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .mobile-nav-links a:hover {
+            color: var(--primary-blue);
+            background-color: var(--light-gray);
+        }
+
+        .mobile-auth-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .mobile-auth-buttons .btn {
+            display: block;
+            text-align: center;
+        }
+
+        .show {
+            display: block;
+        }
+
+        /* Update responsive styles */
+        @media (max-width: 768px) {
+            .nav-links, 
+            .auth-buttons {
+                display: none;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            nav {
+                position: relative;
+            }
+            
+            .login-container {
+                padding: 30px 20px;
+            }
+            
+            .social-buttons {
+                flex-direction: column;
+            }
+        }
+        
+        /* Login Section */
+        .login-section {
+            flex: 1;
+            padding: 80px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-header h2 {
+            font-size: 28px;
+            color: var(--dark-blue);
+            margin-bottom: 10px;
+        }
+        
+        .login-header p {
+            color: var(--medium-gray);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark-gray);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-blue);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.2);
+        }
+        
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+        }
+        
+        .remember-me input {
+            margin-right: 8px;
+        }
+        
+        .forgot-password {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        
+        .login-button {
+            width: 100%;
+            padding: 14px;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .form-footer {
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .form-footer a {
+            color: var(--primary-blue);
+            text-decoration: none;
+        }
+        
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .social-login {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+        
+        .social-login p {
+            margin-bottom: 15px;
+            color: var(--medium-gray);
+        }
+        
+        .social-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .social-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 15px;
+            border-radius: 6px;
+            background-color: var(--white);
+            border: 1px solid #ddd;
+            color: var(--dark-gray);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .social-btn:hover {
+            background-color: var(--light-gray);
+        }
+        
+        .social-btn i {
+            margin-right: 10px;
+        }
+        
+        .google-btn i {
+            color: #DB4437;
+        }
+        
+        .facebook-btn i {
+            color: #4267B2;
+        }
+        
+        /* Form error handling */
+        .error-text {
+            color: var(--error-red);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .has-error .form-control {
+            border-color: var(--error-red);
+        }
+        
+        .has-error .error-text {
+            display: block;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark-blue);
+            color: var(--white);
+            padding: 30px 0;
+            margin-top: auto;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .footer-links a {
+            color: var(--light-blue);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--white);
+        }
+        
+        .copyright {
+            font-size: 14px;
+        }
+        
+        @media (max-width: 480px) {
+            .footer-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .login-header h2 {
+                font-size: 24px;
+            }
+            
+            .logo h1 {
+                font-size: 20px;
+            }
+            
+            .remember-forgot {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+        .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-width: 350px;
+    }
+    
+    .toast-notification {
+        background-color: var(--white);
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        animation: slide-in 0.3s ease-out forwards;
+        position: relative;
+    }
+    
+    .toast-notification.removing {
+        animation: slide-out 0.3s ease-out forwards;
+    }
+    
+    .toast-content {
+        display: flex;
+        align-items: center;
+        padding: 15px 20px;
+    }
+    
+    .toast-notification i {
+        font-size: 24px;
+        margin-right: 15px;
+    }
+    
+    .toast-message {
+        flex: 1;
+        font-size: 14px;
+        color: var(--dark-gray);
+    }
+    
+    .toast-close {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--medium-gray);
+        padding: 0 5px;
+        font-size: 16px;
+        transition: color 0.2s;
+    }
+    
+    .toast-close:hover {
+        color: var(--dark-gray);
+    }
+    
+    .toast-progress {
+        height: 3px;
+        background-color: rgba(0, 0, 0, 0.1);
+        width: 100%;
+    }
+    
+    .toast-progress::after {
+        content: '';
+        display: block;
+        height: 100%;
+        width: 100%;
+        background-color: currentColor;
+        animation: progress 5s linear forwards;
+    }
+    
+    /* Toast types */
+    .toast-notification.success {
+        border-left: 4px solid #4caf50;
+    }
+    
+    .toast-notification.success i {
+        color: #4caf50;
+    }
+    
+    .toast-notification.success .toast-progress::after {
+        background-color: #4caf50;
+    }
+    
+    .toast-notification.error,
+    .toast-notification.danger {
+        border-left: 4px solid var(--error-red);
+    }
+    
+    .toast-notification.error i,
+    .toast-notification.danger i {
+        color: var(--error-red);
+    }
+    
+    .toast-notification.error .toast-progress::after,
+    .toast-notification.danger .toast-progress::after {
+        background-color: var(--error-red);
+    }
+    
+    .toast-notification.warning {
+        border-left: 4px solid #ff9800;
+    }
+    
+    .toast-notification.warning i {
+        color: #ff9800;
+    }
+    
+    .toast-notification.warning .toast-progress::after {
+        background-color: #ff9800;
+    }
+    
+    .toast-notification.info {
+        border-left: 4px solid var(--primary-blue);
+    }
+    
+    .toast-notification.info i {
+        color: var(--primary-blue);
+    }
+    
+    .toast-notification.info .toast-progress::after {
+        background-color: var(--primary-blue);
+    }
+    
+    /* Animations */
+    @keyframes slide-in {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slide-out {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+    
+    @keyframes progress {
+        from {
+            width: 100%;
+        }
+        to {
+            width: 0%;
+        }
+    }
+    </style>
+</head>
+<body>
+    <div class="toast-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="toast-notification {{ category }}">
+                        <div class="toast-content">
+                            <i class="fas 
+                                {% if category == 'success' %}fa-check-circle
+                                {% elif category == 'error' or category == 'danger' %}fa-exclamation-circle
+                                {% elif category == 'warning' %}fa-exclamation-triangle
+                                {% elif category == 'info' %}fa-info-circle
+                                {% else %}fa-bell
+                                {% endif %}">
+                            </i>
+                            <div class="toast-message">{{ message }}</div>
+                        </div>
+                        <div class="toast-progress"></div>
+                        <button class="toast-close"><i class="fas fa-times"></i></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo">
+                    <i class="fas fa-check-circle" style="font-size: 30px; color: var(--primary-blue);"></i>
+                    <h1>TaskFlow</h1>
+                </a>
+                <div class="nav-links">
+                    <a href="#features">Features</a>
+                    <a href="#testimonials">Testimonials</a>
+                    <a href="#pricing">Pricing</a>
+                </div>
+                <div class="auth-buttons">
+                    <a href="/login" class="btn btn-outline">Log In</a>
+                    <a href="/register" class="btn btn-primary">Sign Up</a>
+                </div>
+                <button class="menu-toggle" aria-label="Toggle navigation menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+            <!-- Mobile menu -->
+            <div class="mobile-menu" id="mobile-menu">
+                <div class="mobile-nav-links">
+                    <a href="#features">Features</a>
+                    <a href="#testimonials">Testimonials</a>
+                    <a href="#pricing">Pricing</a>
+                </div>
+                <div class="mobile-auth-buttons">
+                    <a href="/login" class="btn btn-outline">Log In</a>
+                    <a href="/register" class="btn btn-primary">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="login-section">
+        <div class="container">
+            <div class="login-container">
+                <div class="login-header">
+                    <h2>Welcome Back</h2>
+                    <p>Log in to continue organizing your tasks</p>
+                </div>
+                
+                <form id="loginForm" method="POST">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="form-group {% if form.email.errors %}has-error{% endif %}">
+                        <label for="email">Email Address</label>
+                        {{ form.email(class="form-control", placeholder="your@email.com", id="email") }}
+                        {% if form.email.errors %}
+                            <span class="error-text">{{ form.email.errors[0] }}</span>
+                        {% else %}
+                            <span class="error-text">Please enter a valid email address</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group {% if form.password.errors %}has-error{% endif %}">
+                        <label for="password">Password</label>
+                        {{ form.password(class="form-control", placeholder="Enter your password", id="password") }}
+                        {% if form.password.errors %}
+                            <span class="error-text">{{ form.password.errors[0] }}</span>
+                        {% else %}
+                            <span class="error-text">Please enter your password</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="remember-forgot">
+                        <div class="remember-me">
+                            <input type="checkbox" id="rememberMe" name="remember">
+                            <label for="rememberMe">Remember me</label>
+                        </div>
+                        <a href="{{ url_for('forgot_password') }}" class="forgot-password">Forgot password?</a>
+                    </div>
+                    
+                    {{ form.submit(class="btn btn-primary login-button", value="Log In") }}
+                    
+                    <div class="form-footer">
+                        <p>Don't have an account? <a href="{{ url_for('register') }}">Sign Up</a></p>
+                    </div>
+                </form>
+                
+                <div class="social-login">
+                    <p>Or log in with</p>
+                    <div class="social-buttons">
+                        <button type="button" class="social-btn google-btn">
+                            <i class="fab fa-google"></i>
+                            Google
+                        </button>
+                        <button type="button" class="social-btn facebook-btn">
+                            <i class="fab fa-facebook-f"></i>
+                            Facebook
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="copyright">
+                    &copy; 2025 TaskFlow. All rights reserved.
+                </div>
+                <div class="footer-links">
+                    <a href="/terms">Terms</a>
+                    <a href="/privacy">Privacy</a>
+                    <a href="/contact">Contact</a>
+                    <a href="/help">Help</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle functionality
+        const menuToggle = document.querySelector('.menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('show');
+        });
+        // Social login buttons (would connect to respective APIs in a real implementation)
+        document.querySelector('.google-btn').addEventListener('click', function() {
+            alert('Google login functionality would be implemented here');
+        });
+        
+        document.querySelector('.facebook-btn').addEventListener('click', function() {
+            alert('Facebook login functionality would be implemented here');
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+        const toasts = document.querySelectorAll('.toast-notification');
+        
+        toasts.forEach(toast => {
+            // Auto-dismiss after 5 seconds
+            setTimeout(() => {
+                dismissToast(toast);
+            }, 5000);
+            
+            // Close button functionality
+            const closeBtn = toast.querySelector('.toast-close');
+            closeBtn.addEventListener('click', () => {
+                dismissToast(toast);
+            });
+        });
+        
+        function dismissToast(toast) {
+            toast.classList.add('removing');
+            setTimeout(() => {
+                toast.remove();
+            }, 300); // Match the animation duration
+        }
+    });
+    </script>
+</body>
+</html>
