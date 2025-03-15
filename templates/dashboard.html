@@ -592,6 +592,169 @@
                 display: none;
             }
         }
+        /* Mobile Menu Toggle */
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--dark-gray);
+    cursor: pointer;
+}
+
+/* Mobile Navigation */
+.mobile-nav {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.mobile-nav.show {
+    display: block;
+}
+
+.mobile-nav-content {
+    background-color: var(--white);
+    width: 80%;
+    max-width: 300px;
+    height: 100%;
+    padding: 20px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+.mobile-nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.mobile-nav-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--dark-gray);
+    cursor: pointer;
+}
+
+.mobile-nav-menu {
+    list-style: none;
+    margin-bottom: 20px;
+}
+
+.mobile-nav-menu li {
+    margin-bottom: 10px;
+}
+
+.mobile-nav-menu a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--dark-gray);
+    transition: all 0.3s;
+}
+
+.mobile-nav-menu a:hover,
+.mobile-nav-menu a.active {
+    background-color: var(--light-blue);
+    color: var(--dark-blue);
+}
+
+.mobile-nav-menu a i {
+    width: 20px;
+    text-align: center;
+}
+
+/* Enhance existing media queries */
+@media (max-width: 768px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+    
+    .task-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .task-form {
+        grid-template-columns: 1fr;
+    }
+    
+    .nav-links {
+        display: none;
+    }
+    
+    .mobile-menu-toggle {
+        display: block;
+    }
+    
+    /* Improve user menu on tablet */
+    .user-menu {
+        gap: 10px;
+    }
+    
+    .user-name {
+        display: none;
+    }
+    
+    /* Make table responsive */
+    .task-table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    /* Adjust modal width */
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Further adjustments for smaller screens */
+    .task-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .task-actions {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .action-btn {
+        width: 36px;
+        height: 36px;
+    }
+    
+    /* Hide less important table columns on mobile */
+    .task-table th:nth-child(2),
+    .task-table td:nth-child(2),
+    .task-table th:nth-child(3),
+    .task-table td:nth-child(3) {
+        display: none;
+    }
+    
+    /* Add some spacing to the remaining columns */
+    .task-table th,
+    .task-table td {
+        padding: 10px 5px;
+    }
+    
+    /* Make buttons in forms full width */
+    .form-group .btn {
+        width: 100%;
+    }
+}
     </style>
 </head>
 <body>
@@ -608,6 +771,9 @@
                     <a href="/analytics">Analytics</a>
                     <a href="/settings">Settings</a>
                 </div>
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
                 <div class="user-menu">
                     <div class="user-avatar">{{ user.username[0] }}</div>
                     <span class="user-name">{{ user.username }}</span>
@@ -618,7 +784,85 @@
             </nav>
         </div>
     </header>
-
+    <div class="mobile-nav" id="mobile-nav">
+        <div class="mobile-nav-content">
+            <div class="mobile-nav-header">
+                <div class="logo">
+                    <i class="fas fa-check-circle" style="font-size: 24px; color: var(--primary-blue);"></i>
+                    <h1 style="font-size: 20px;">TaskFlow</h1>
+                </div>
+                <button class="mobile-nav-close" id="mobile-nav-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="user-info" style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                <div class="user-avatar">{{ user.username[0] }}</div>
+                <span class="user-name">{{ user.username }}</span>
+            </div>
+            <ul class="mobile-nav-menu">
+                <li>
+                    <a href="/dashboard" class="active">
+                        <i class="fas fa-tasks"></i>
+                        <span>All Tasks</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard?filter=pending">
+                        <i class="fas fa-hourglass-half"></i>
+                        <span>Pending Tasks</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard?filter=completed">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Completed Tasks</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard?priority=high">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>High Priority</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard?sort=due_date">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Due Date</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/categories">
+                        <i class="fas fa-tag"></i>
+                        <span>Categories</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/calendar">
+                        <i class="fas fa-calendar"></i>
+                        <span>Calendar</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/analytics">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Analytics</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/settings">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/logout" style="color: var(--danger);">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
     <div class="container">
         <!-- Flash Messages -->
         <div class="flash-messages">
@@ -912,6 +1156,42 @@
                 closeEditModal();
             }
         });
+
+        // Add this to your existing script tag
+// Mobile menu functionality
+const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+const mobileNav = document.getElementById('mobile-nav');
+const mobileNavClose = document.getElementById('mobile-nav-close');
+
+mobileMenuToggle.addEventListener('click', () => {
+    mobileNav.classList.add('show');
+    document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+});
+
+mobileNavClose.addEventListener('click', () => {
+    mobileNav.classList.remove('show');
+    document.body.style.overflow = ''; // Restore scrolling
+});
+
+// Close mobile menu when clicking outside the menu content
+mobileNav.addEventListener('click', (event) => {
+    if (event.target === mobileNav) {
+        mobileNav.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+});
+
+// Add touch-friendly behavior for mobile devices
+document.addEventListener('DOMContentLoaded', function() {
+    // Make buttons slightly larger on touch devices
+    if ('ontouchstart' in window) {
+        const actionButtons = document.querySelectorAll('.action-btn');
+        actionButtons.forEach(btn => {
+            btn.style.width = '36px';
+            btn.style.height = '36px';
+        });
+    }
+});
     </script>
 </body>
 </html>
