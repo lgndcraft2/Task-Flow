@@ -755,12 +755,113 @@
         width: 100%;
     }
 }
+/* Improve table display on mobile */
+@media (max-width: 768px) {
+    .task-table {
+        display: block;
+        width: 100%;
+    }
+    
+    .task-table thead {
+        display: none; /* Hide table headers on mobile */
+    }
+    
+    .task-table tbody, .task-table tr {
+        display: block;
+        width: 100%;
+    }
+    
+    .task-table td {
+        display: flex;
+        padding: 10px;
+        text-align: right;
+        justify-content: space-between;
+        border-bottom: none;
+    }
+    
+    .task-table td:before {
+        content: attr(data-label);
+        font-weight: 600;
+        float: left;
+        text-align: left;
+    }
+    
+    .task-table tr {
+        margin-bottom: 15px;
+        border-bottom: 1px solid var(--light-gray);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        background-color: #fff;
+    }
+    
+    .task-actions {
+        justify-content: flex-end;
+    }
+}
+
+/* Improve form elements on mobile */
+@media (max-width: 480px) {
+    .form-control {
+        padding: 12px 15px; /* Larger touch targets */
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+    
+    .btn {
+        padding: 12px 20px;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    /* Improve stats cards layout */
+    .task-stats {
+        gap: 15px;
+    }
+    
+    .stat-card {
+        padding: 15px;
+    }
+    
+    /* Better spacing for mobile */
+    .dashboard {
+        padding: 15px 0;
+        gap: 15px;
+    }
+    
+    .add-task, .tasks-container {
+        padding: 15px;
+    }
+}
+
+/* Fix task filters on mobile */
+@media (max-width: 480px) {
+    .tasks-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .task-filters {
+        width: 100%;
+        display: flex;
+        overflow-x: auto;
+        padding-bottom: 5px;
+    }
+    
+    .filter-btn {
+        flex: 1;
+        text-align: center;
+        white-space: nowrap;
+    }
+}
     </style>
 </head>
 <body>
     <header>
         <div class="container">
             <nav>
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
                 <div class="logo">
                     <i class="fas fa-check-circle" style="font-size: 30px; color: var(--primary-blue);"></i>
                     <h1>TaskFlow</h1>
@@ -771,9 +872,6 @@
                     <a href="/analytics">Analytics</a>
                     <a href="/settings">Settings</a>
                 </div>
-                <button class="mobile-menu-toggle" id="mobile-menu-toggle">
-                    <i class="fas fa-bars"></i>
-                </button>
                 <div class="user-menu">
                     <div class="user-avatar">{{ user.username[0] }}</div>
                     <span class="user-name">{{ user.username }}</span>
@@ -1013,30 +1111,30 @@
                         <tbody>
                             {% for task in tasks %}
                             <tr class="task-item" data-status="{{ task.status.lower() }}">
-                                <td>
+                                <td data-label="Task">
                                     <span class="task-title">{{ task.title }}</span>
                                 </td>
-                                <td>
+                                <td data-label="Category">
                                     {% if task.category %}
                                     <span class="task-category">{{ task.category.name }}</span>
                                     {% else %}
                                     <span class="task-category">Uncategorized</span>
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td data-label="Due Date">
                                     <span class="task-due">{{ task.due_date.strftime('%b %d, %Y') }}</span>
                                 </td>
-                                <td>
+                                <td data-label="Priority">
                                     <span class="priority-{{ task.priority.lower() }}">
                                         {{ task.priority }}
                                     </span>
                                 </td>
-                                <td>
+                                <td data-label="Status">
                                     <span class="task-status status-{{ task.status.lower() }}">
                                         {{ task.status }}
                                     </span>
                                 </td>
-                                <td>
+                                <td data-label="Actions">
                                     <div class="task-actions">
                                         <button class="action-btn edit-btn" onclick="openEditModal('{{ task.id }}', '{{ task.title }}', '{{ task.category.id if task.category else '' }}', '{{ task.due_date.strftime('%Y-%m-%dT%H:%M') }}', '{{ task.priority }}')">
                                             <i class="fas fa-edit"></i>
@@ -1192,6 +1290,29 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Enhance mobile experience
+function enhanceMobileExperience() {
+    const isMobile = window.innerWidth <= 768;
+    
+    // Adjust form elements padding and sizing
+    const formControls = document.querySelectorAll('.form-control');
+    formControls.forEach(control => {
+        control.style.padding = isMobile ? '12px 15px' : '10px 15px';
+    });
+    
+    // Improve scrolling behavior for tables
+    if (isMobile) {
+        const tables = document.querySelectorAll('.task-table');
+        tables.forEach(table => {
+            table.style.webkitOverflowScrolling = 'touch';
+        });
+    }
+}
+
+// Run on page load and resize
+window.addEventListener('load', enhanceMobileExperience);
+window.addEventListener('resize', enhanceMobileExperience);
     </script>
 </body>
 </html>
