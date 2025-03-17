@@ -133,6 +133,10 @@ def edit_task(task_id):
         flash('You do not have permission to edit this task.', 'danger')
         return redirect(url_for('dashboard'))
     
+    if task.status == "Completed":
+        flash('You cannot edit a completed task.', 'danger')
+        return redirect(url_for('dashboard'))
+    
     # Get form data
     title = request.form.get('title')
     category_id = request.form.get('category')

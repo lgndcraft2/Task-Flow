@@ -1136,9 +1136,11 @@
                                 </td>
                                 <td data-label="Actions">
                                     <div class="task-actions">
+                                        {% if task.status != 'Completed' %}
                                         <button class="action-btn edit-btn" onclick="openEditModal('{{ task.id }}', '{{ task.title }}', '{{ task.category.id if task.category else '' }}', '{{ task.due_date.strftime('%Y-%m-%dT%H:%M') }}', '{{ task.priority }}')">
                                             <i class="fas fa-edit"></i>
                                         </button>
+                                        {% endif %}
                                         {% if task.status != 'Completed' %}
                                         <form action="{{ url_for('complete_task', task_id=task.id) }}" method="POST" style="display: inline;">
                                             <button type="submit" class="action-btn complete-btn">
