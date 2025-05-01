@@ -12,7 +12,8 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = 'qwertyasababyboy'
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://avnadmin:AVNS_wPcoMGUzftQFdfQhBnh@nafcourse-nasflask.e.aivencloud.com:19043/tasks"
+# app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://avnadmin:AVNS_wPcoMGUzftQFdfQhBnh@nafcourse-nasflask.e.aivencloud.com:19043/tasks"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tasks.db"
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
     "connect_args": {"ssl": {"ssl-mode": "REQUIRED"}}
 }
@@ -237,32 +238,29 @@ def log_out():
     return redirect(url_for("login"))
 
 
-# @app.errorhandler(404)
-# def page_not_found(e):
-#     if current_user.is_authenticated:
-#         user = current_user
-#     else:
-#         return redirect(url_for('base'))
-#     return render_template("404.html")
+@app.errorhandler(404)
+def page_not_found(e):
+    if current_user.is_authenticated:
+        user = current_user
+    else:
+        return redirect(url_for('base'))
+    return render_template("404.html")
 
-# @app.errorhandler(413)
-# def page_not_found(e):
-#     if current_user.is_authenticated:
-#         user = current_user
-#     else:
-#         return redirect(url_for('base'))
-#     return render_template("413.html")
+@app.errorhandler(413)
+def page_not_found(e):
+    if current_user.is_authenticated:
+        user = current_user
+    else:
+        return redirect(url_for('base'))
+    return render_template("413.html")
 
-# @app.errorhandler(500)
-# def page_not_found(e):
-#     if current_user.is_authenticated:
-#         user = current_user
-#     else:
-#         return redirect(url_for('base'))
-#     return render_template("500.html")
-
-with app.app_context():
-    db.create_all()
+@app.errorhandler(500)
+def page_not_found(e):
+    if current_user.is_authenticated:
+        user = current_user
+    else:
+        return redirect(url_for('base'))
+    return render_template("500.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
