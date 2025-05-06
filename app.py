@@ -11,14 +11,13 @@ from datetime import datetime, timedelta
 
 
 app = Flask(__name__)
+db = SQLAlchemy(app)
 app.config["SECRET_KEY"] = 'qwertyasababyboy'
 # app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://avnadmin:AVNS_wPcoMGUzftQFdfQhBnh@nafcourse-nasflask.e.aivencloud.com:19043/tasks"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tasks.db"
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
     "connect_args": {"ssl": {"ssl-mode": "REQUIRED"}}
 }
-
-db = SQLAlchemy(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
