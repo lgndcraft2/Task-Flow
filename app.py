@@ -262,5 +262,8 @@ def page_not_found(e):
         return redirect(url_for('base'))
     return render_template("500.html")
 
+with app.app_context():
+    db.create_all()
+
 if __name__ == "__main__":
     app.run(debug=True)
